@@ -1,0 +1,49 @@
+<!doctype html>
+
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lato|Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/closetstyle.css') }}">
+</head>
+  <body>
+    <h1>Upload Page</h1>
+
+    <form action = "/uploader" method = "POST" enctype = "multipart/form-data">
+      <select name ="garmenttype">
+        <option value="top" selected>Accessory</option>
+        <option value="bottoms" selected>Bottoms</option>
+        <option value="dress" selected>Dress</option>
+        <option value="outerwear" selected>Outerwear</option>
+        <option value="shoes" selected>Shoes</option>
+        <option value="top" selected>Top</option>
+      </select>
+      <select name ="color">
+        <option value="beige" selected>Beige</option>
+        <option value="black" selected>Black</option>
+        <option value="blue" selected>Blue</option>
+        <option value="brown" selected>Brown</option>
+        <option value="gold" selected>Gold</option>
+        <option value="green" selected>Green</option>
+        <option value="grey" selected>Grey</option>
+        <option value="multicolor" selected>Multicolor</option>
+        <option value="pink" selected>Pink</option>
+        <option value="purple" selected>Purple</option>
+        <option value="red" selected>Red</option>
+        <option value="white" selected>White</option>
+      </select>
+      <select name ="size">
+        <option value="xxs" selected>XXS</option>
+        <option value="xs" selected>XS</option>
+        <option value="s" selected>S</option>
+        <option value="m" selected>M</option>
+        <option value="l" selected>L</option>
+        <option value="xl" selected>XL</option>
+        <option value="xxl" selected>XXL</option>
+        <option value="onesize" selected>Onesize</option>
+      </select>
+      <input type = "text" name = "description" />
+      <input type = "file" name = "file" />
+      <input type = "submit"/>
+    </form>
+  </body>
+</html>

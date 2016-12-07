@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lato|Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/closetstyle.css') }}">
+</head>
+  <body>
+    <h1>Browsing all garments</h1>
+    <h3><a href="{{url_for('upload')}}">Upload a new garment</a></h3>
+    {% for garment in garments %}
+    <a href="{{url_for('reserve',garment_id=garment.garment_id)}}">
+    <div class="garment_item">
+      <img src="static/images/{{ garment.photo_loc | default('defaultgarment.png') }}" class="garment_img">
+      <div class="garment_text">
+        <p class="garment_type">{{garment.garment_type}}</p>
+        <p class="garment_color">{{garment.color}}</p>
+        <p class="garment_size">{{garment.size}}</p>
+        <p class="garment_desc">{{garment.desc}}</p>
+      </div>
+    </div>
+  </a>
+    {% endfor %}
+  </body>
+</html>
