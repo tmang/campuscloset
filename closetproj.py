@@ -106,15 +106,15 @@ def uploader():
 				person_id = cursor.fetchone()[0]
 
 				# get tag id for garment type
-				cursor.execute('''SELECT tag_id FROM tag WHERE tag_name = %s''', [request.form['garmenttype']])
+				cursor.execute('''SELECT tag_id FROM tag WHERE feature_type = 'garment_type' AND tag_name = %s''', [request.form['garmenttype']])
 				tagid_garmenttype = cursor.fetchone()[0]
 
 				# get tag id for color
-				cursor.execute('''SELECT tag_id FROM tag WHERE tag_name = %s''', [request.form['color']])
+				cursor.execute('''SELECT tag_id FROM tag WHERE feature_type = 'color' AND tag_name = %s''', [request.form['color']])
 				tagid_color = cursor.fetchone()[0]
 
 				# get tag id for size
-				cursor.execute('''SELECT tag_id FROM tag WHERE tag_name = %s''', [request.form['size']])
+				cursor.execute('''SELECT tag_id FROM tag WHERE feature_type = 'size' AND tag_name = %s''', [request.form['size']])
 				tagid_size = cursor.fetchone()[0]
 
 				params = [request.form['description'], filename, person_id, tagid_garmenttype, tagid_color, tagid_size]
