@@ -19,13 +19,13 @@ def allowed_file(filename):
 def lookUpGarment(garment):
 	cursor = mysql.connection.cursor()
 
-	cursor.execute('''SELECT tag_name FROM tag WHERE tag_id = %s''', [garment[4]])
+	cursor.execute('''SELECT tag_name FROM tag WHERE feature_type = 'garment type' AND tag_id = %s''', [garment[4]])
 	garment_type = cursor.fetchone()[0]
 
-	cursor.execute('''SELECT tag_name FROM tag WHERE tag_id = %s''', [garment[5]])
+	cursor.execute('''SELECT tag_name FROM tag WHERE feature_type = 'color' AND tag_id = %s''', [garment[5]])
 	color = cursor.fetchone()[0]
 
-	cursor.execute('''SELECT tag_name FROM tag WHERE tag_id = %s''', [garment[6]])
+	cursor.execute('''SELECT tag_name FROM tag WHERE feature_type = 'size' AND tag_id = %s''', [garment[6]])
 	size = cursor.fetchone()[0]
 
 	garmentdict = {
@@ -106,7 +106,7 @@ def uploader():
 				person_id = cursor.fetchone()[0]
 
 				# get tag id for garment type
-				cursor.execute('''SELECT tag_id FROM tag WHERE feature_type = 'garment_type' AND tag_name = %s''', [request.form['garmenttype']])
+				cursor.execute('''SELECT tag_id FROM tag WHERE feature_type = 'garment type' AND tag_name = %s''', [request.form['garmenttype']])
 				tagid_garmenttype = cursor.fetchone()[0]
 
 				# get tag id for color
