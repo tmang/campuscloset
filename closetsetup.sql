@@ -46,3 +46,37 @@ CREATE TABLE tag (
 	feature_type ENUM('garment type', 'color', 'size'),
 	primary key (tag_id)
 ) ENGINE=InnoDB;
+
+INSERT INTO person (name, password) VALUES ('user1', 'foo123');
+
+INSERT INTO tag
+(tag_name, feature_type)
+VALUES
+('accessory','garment type'),
+('bottoms','garment type'),
+('dress','garment type'),
+('other','garment type'),
+('outerwear','garment type'),
+('shoes','garment type'),
+('top','garment type'),
+('beige','color'),
+('black','color'),
+('blue','color'),
+('brown','color'),
+('gold','color'),
+('green','color'),
+('grey','color'),
+('multicolor','color'),
+('pink','color'),
+('purple','color'),
+('red','color'),
+('white','color'),
+('other','color'),
+('xxs','size'),
+('xs','size'),
+('s','size'),
+('m','size'),
+('l','size'),
+('xl','size'),
+('xxl','size'),
+('other','size');
