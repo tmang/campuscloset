@@ -79,4 +79,5 @@ VALUES
 ('l','size'),
 ('xl','size'),
 ('xxl','size'),
+('onesize','size'),
 ('other','size');
