@@ -6,6 +6,10 @@
 </head>
   <body>
     <h1>Reservation Page</h1>
+    <h3><a href="{{url_for('upload')}}">Upload a new garment</a></h3>
+    <h3><a href="{{url_for('browse')}}">Browse all garments</a></h3>
+    <h3><a href="{{url_for('mygarments')}}">See my garments</a></h3>
+    <h3><a href="{{url_for('myreservations')}}">See my reservations</a></h3>
     <div class="garment_item">
       <img src="{{url_for('static', filename="images/")}}{{ garment.photo_loc | default('defaultgarment.png') }}" class="garment_img">
       <div class="garment_text">

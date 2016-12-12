@@ -176,6 +176,26 @@ def reserver(garment_id):
 			return error_login()
 	return
 
+@app.route('/mygarments')
+def mygarments():
+	cursor = mysql.connection.cursor()
+	cursor.execute('''SELECT * FROM garment WHERE person_id = %s''', [session['person_id']])
+	garments_list = cursor.fetchall()
+	garments = []
+	for garment in garments_list:
+		garments.append(lookUpGarment(garment))
+	return render_template('browse.html', garments = garments)
+
+@app.route('/myreservations')
+def myreservations():
+	cursor = mysql.connection.cursor()
+	cursor.execute('''SELECT * FROM garment WHERE garment_id IN (SELECT garment_id FROM reservation WHERE person_id = %s)''', [session['person_id']])
+	garments_list = cursor.fetchall()
+	garments = []
+	for garment in garments_list:
+		garments.append(lookUpGarment(garment))
+	return render_template('browse.html', garments = garments)
+
 app.secret_key = 'A0ZolP!j/3yX RGG8$$xmN]LWX/,?RT'
 
 
