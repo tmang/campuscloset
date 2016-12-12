@@ -10,7 +10,7 @@
     {% for garment in garments %}
     <a href="{{url_for('reserve',garment_id=garment.garment_id)}}">
     <div class="garment_item">
-      <img src="static/images/{{ garment.photo_loc | default('defaultgarment.png') }}" class="garment_img">
+      <img src="{{url_for('static',filename="images/")}}{{ garment.photo_loc | default('defaultgarment.png') }}" class="garment_img">
       <div class="garment_text">
         <p class="garment_type">{{garment.garment_type}}</p>
         <p class="garment_color">{{garment.color}}</p>

@@ -1,5 +1,5 @@
 import os, sys, datetime, flask
-from flask import Flask, render_template, request, make_response, redirect, url_for, current_app
+from flask import Flask, render_template, request, make_response, redirect, url_for, current_app, session
 from werkzeug import secure_filename
 from flask_mysqldb import MySQL
 
@@ -42,8 +42,7 @@ def lookUpGarment(garment):
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-	name = request.cookies.get('name')
-	if name:
+	if 'username' in session:
 		return browse()
 	else:
 		return login()
@@ -60,9 +59,14 @@ def validate():
 
 		# check username validity
 		cursor.execute('''SELECT * FROM person WHERE name = %s''', [name])
-		if cursor.fetchone():
-			response = make_response(browse())
-			response.set_cookie('name', name)
+                person_lookup = cursor.fetchone()
+                if person_lookup: 
+                    if person_lookup[2] == request.form['password']:
+			    response = make_response(browse())
+                            session['username'] = name;
+                            session['person_id'] = person_lookup[1]
+                    else:
+                        return 'incorrect login credentials'
 		else:
 			response = make_response(error_login())
 		return response
@@ -92,18 +96,13 @@ def upload():
 def uploader():
 	cursor = mysql.connection.cursor()
 	if request.method == 'POST':
-		name = request.cookies.get('name')
-		if name:
+	        if 'username' in session:
 			file = request.files['file']
 			if file and allowed_file(file.filename):
 				# save file to folder
 				filename = secure_filename(file.filename)
 				file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-				# record uploaded garment into db
-				# get person id
-				cursor.execute('''SELECT person_id FROM person WHERE name = %s''', [name])
-				person_id = cursor.fetchone()[0]
 
 				# get tag id for garment type
 				cursor.execute('''SELECT tag_id FROM tag WHERE feature_type = 'garment type' AND tag_name = %s''', [request.form['garmenttype']])
@@ -117,7 +116,7 @@ def uploader():
 				cursor.execute('''SELECT tag_id FROM tag WHERE feature_type = 'size' AND tag_name = %s''', [request.form['size']])
 				tagid_size = cursor.fetchone()[0]
 
-				params = [request.form['description'], filename, person_id, tagid_garmenttype, tagid_color, tagid_size]
+				params = [request.form['description'], filename, session['person_id'], tagid_garmenttype, tagid_color, tagid_size]
 
 				cursor.execute("""INSERT INTO garment (description, photo_loc, person_id, tag_garmenttype_id, tag_color_id, tag_size_id) VALUES (%s, %s, %s, %s, %s, %s)""", (params))
 				mysql.connection.commit()
@@ -133,8 +132,7 @@ def uploader():
 
 @app.route('/reserve/<int:garment_id>', methods = ['GET', 'POST'])
 def reserve(garment_id):
-	name = request.cookies.get('name')
-	if name:
+	if 'username' in session:
 		cursor = mysql.connection.cursor()
 		cursor.execute('''SELECT * FROM garment WHERE garment_id = %s''', [garment_id])
 		garment = cursor.fetchone()
@@ -150,12 +148,9 @@ def reserve(garment_id):
 def reserver(garment_id):
 	cursor = mysql.connection.cursor()
 	if request.method == 'POST':
-		name = request.cookies.get('name')
-		if name:
+	        if 'username' in session:
 				# record reservation into db
 				# get person id
-				cursor.execute('''SELECT person_id FROM person WHERE name = %s''', [name])
-				person_id = cursor.fetchone()[0]
 
 				# check whether start date for this reservation is before
 				# any existing reservation end dates
@@ -164,7 +159,7 @@ def reserver(garment_id):
 				print conflicts
 
 				if not conflicts:
-					params = [request.form['date_start'], request.form['date_end'], person_id, garment_id]
+					params = [request.form['date_start'], request.form['date_end'], session['person_id'], garment_id]
 
 					cursor.execute("""INSERT INTO reservation (date_start, date_end, person_id, garment_id) VALUES (%s, %s, %s, %s)""", (params))
 					mysql.connection.commit()
@@ -176,6 +171,8 @@ def reserver(garment_id):
 		else:
 			return error_login()
 	return
+
+app.secret_key = 'A0ZolP!j/3yX RGG8$$xmN]LWX/,?RT'
 
 
 if __name__ == '__main__':
