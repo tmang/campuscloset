@@ -56,17 +56,15 @@ def validate():
 	cursor = mysql.connection.cursor()
 	if request.method == 'POST':
 		name = request.form['name']
+		password = request.form['password']
 
 		# check username validity
-		cursor.execute('''SELECT * FROM person WHERE name = %s''', [name])
-                person_lookup = cursor.fetchone()
-                if person_lookup: 
-                    if person_lookup[2] == request.form['password']:
-			    response = make_response(browse())
-                            session['username'] = name;
-                            session['person_id'] = person_lookup[1]
-                    else:
-                        return 'incorrect login credentials'
+		cursor.execute('''SELECT * FROM person WHERE name = %s AND password = %s''', [name, password])
+		person_lookup = cursor.fetchone()
+		if person_lookup:
+				response = make_response(browse())
+				session['username'] = name
+				session['person_id'] = person_lookup[0]
 		else:
 			response = make_response(error_login())
 		return response
@@ -152,14 +150,20 @@ def reserver(garment_id):
 				# record reservation into db
 				# get person id
 
+				new_start = request.form['date_start']
+				new_end = request.form['date_end']
+
+
 				# check whether start date for this reservation is before
 				# any existing reservation end dates
-				cursor.execute('''SELECT * FROM reservation WHERE garment_id = %s AND (date_start <= %s AND ) AND)''', [garment_id, request.form['date_start']])
+				cursor.execute('''SELECT * FROM reservation WHERE garment_id = %s AND ( (date_start >= %s AND date_start <= %s) OR (date_start <= %s AND date_end >= %s))''',
+				[garment_id, new_start, new_end, new_start, new_end])
 				conflicts = cursor.fetchall()
 				print conflicts
 
 				if not conflicts:
 					params = [request.form['date_start'], request.form['date_end'], session['person_id'], garment_id]
+					print params
 
 					cursor.execute("""INSERT INTO reservation (date_start, date_end, person_id, garment_id) VALUES (%s, %s, %s, %s)""", (params))
 					mysql.connection.commit()
