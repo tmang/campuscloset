@@ -172,8 +172,8 @@ def reserver(garment_id):
 					flash('reservation successful!')
 					return redirect(url_for('browse'))
 				else:
-					flash('this garment is already reserved for these dates')
-					return redirect(url_for('browse'))
+					flash('this garment is already reserved for those dates')
+					return redirect(url_for('reserve', garment_id=garment_id))
 		else:
 			return redirect(url_for('error_login'))
 	return

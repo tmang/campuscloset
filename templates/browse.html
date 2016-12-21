@@ -2,7 +2,7 @@
 {% block title %}Browse Garments{% endblock %}
 {% block header %}Browse Garments{% endblock %}
 {% block content %}
-<form action = "SOMETHINGIDK" method = "POST" enctype = "multipart/form-data">
+<form id="filterform" action = "" method = "POST" enctype = "multipart/form-data">
   <select name ="garmenttype" multiple>
     <option value="accessory" selected>Accessory</option>
     <option value="bottoms" selected>Bottoms</option>
@@ -55,3 +55,18 @@
 </a>
 {% endfor %}
 {% endblock %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+  $("#filterform").submit(function() {
+    var $inputs = $('#filterform :input');
+    var values = {};
+    $inputs.each(function() {
+      values[this.name] = $(this).val();
+      console.log(name + ': ');
+      console.log(values[name])
+    });
+    alert("submitted");
+  });
+});
