@@ -1,5 +1,5 @@
 import os, sys, datetime, flask
-from flask import Flask, render_template, request, make_response, redirect, url_for, current_app, session
+from flask import Flask, flash, render_template, request, make_response, redirect, url_for, current_app, session
 from werkzeug import secure_filename
 from flask_mysqldb import MySQL
 
@@ -43,9 +43,9 @@ def lookUpGarment(garment):
 @app.route('/', methods=["GET", "POST"])
 def index():
 	if 'username' in session:
-		return browse()
+		return redirect(url_for('browse'))
 	else:
-		return login()
+		return redirect(url_for('login'))
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -119,12 +119,13 @@ def uploader():
 				cursor.execute("""INSERT INTO garment (description, photo_loc, person_id, tag_garmenttype_id, tag_color_id, tag_size_id) VALUES (%s, %s, %s, %s, %s, %s)""", (params))
 				mysql.connection.commit()
 
-				print 'file uploaded successfully'
-				return browse()
+				flash('file uploaded successfully')
+				return redirect(url_for('browse'))
 			else:
-				return 'file type not allowed'
+				flash('file type not allowed')
+				return redirect(url_for('browse'))
 		else:
-			return error_login()
+			return redirect(url_for('error_login'))
 	return
 
 
@@ -139,7 +140,7 @@ def reserve(garment_id):
 
 		return render_template('reserve.html', garment=garment)
 	else:
-		return error_login()
+		return redirect(url_for('error_login'))
 
 
 @app.route('/reserver/<int:garment_id>', methods = ['GET', 'POST'])
@@ -168,12 +169,13 @@ def reserver(garment_id):
 					cursor.execute("""INSERT INTO reservation (date_start, date_end, person_id, garment_id) VALUES (%s, %s, %s, %s)""", (params))
 					mysql.connection.commit()
 
-					print 'reservation successful!'
-					return browse()
+					flash('reservation successful!')
+					return redirect(url_for('browse'))
 				else:
-					return 'this garment is already reserved for these dates'
+					flash('this garment is already reserved for these dates')
+					return redirect(url_for('browse'))
 		else:
-			return error_login()
+			return redirect(url_for('error_login'))
 	return
 
 @app.route('/mygarments')
