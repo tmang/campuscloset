@@ -1,16 +1,12 @@
-<!doctype html>
-<html>
-<head>
-  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lato|Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/closetstyle.css') }}">
-</head>
-  <body>
-      <div class = "loginbox">
-        <form action = "/validate" method = "POST">
-          <p>Name <input type = "text" name = "name" /></p>
-          <p>Password <input type = "text" name = "password"/></p>
-          <p><input type = "submit" value = "submit" /></p>
-        </form>
-    </div>
-  </body>
-</html>
+{% extends "layout_template.html" %}
+{% block title %}Login{% endblock %}
+{% block nav %}{% endblock %}
+{% block content %}
+<div class = "loginbox">
+  <form action = "/validate" method = "POST">
+    <p>Name <input type = "text" name = "name" /></p>
+    <p>Password <input type = "text" name = "password"/></p>
+    <p><input type = "submit" value = "submit" /></p>
+  </form>
+</div>
+{% endblock %}

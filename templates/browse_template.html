@@ -1,8 +1,6 @@
 {% extends "layout_template.html" %}
-{% block title %}Browse Garments{% endblock %}
-{% block header %}Browse Garments{% endblock %}
 {% block content %}
-<form action = "SOMETHINGIDK" method = "POST" enctype = "multipart/form-data">
+<form action = {% block browseaction %}{% endblock %} method = "POST" enctype = "multipart/form-data">
   <select name ="garmenttype" multiple>
     <option value="accessory" selected>Accessory</option>
     <option value="bottoms" selected>Bottoms</option>

@@ -1,15 +1,7 @@
-<!doctype html>
-<html>
-<head>
-  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lato|Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/closetstyle.css') }}">
-</head>
-  <body>
-    <h1>Reservation Page</h1>
-    <h3><a href="{{url_for('upload')}}">Upload a new garment</a></h3>
-    <h3><a href="{{url_for('browse')}}">Browse all garments</a></h3>
-    <h3><a href="{{url_for('mygarments')}}">See my garments</a></h3>
-    <h3><a href="{{url_for('myreservations')}}">See my reservations</a></h3>
+{% extends "layout_template.html" %}
+{% block title %}Reserve a Garment{% endblock %}
+{% block header %}Reserve a Garment{% endblock %}
+{% block content %}
     <div class="garment_item">
       <img src="{{url_for('static', filename="images/")}}{{ garment.photo_loc | default('defaultgarment.png') }}" class="garment_img">
       <div class="garment_text">
@@ -24,5 +16,4 @@
       <input type = "date" name = "date_end"/>
       <input type = "submit"/>
     </form>
-  </body>
-</html>
+{% endblock}

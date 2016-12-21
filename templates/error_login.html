@@ -1,10 +1,6 @@
-<!doctype html>
-<html>
-<head>
-  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lato|Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/closetstyle.css') }}">
-</head>
-  <body>
-    <h1>You need to <a href="{{ url_for('login') }}">login</a> to do that!</h1>
-  </body>
-</html>
+{% extends "layout_template.html" %}
+{% block title %}Error{% endblock %}
+{% block nav %}{% endblock %}
+{% block content %}
+<h1>You need to <a href="{{ url_for('login') }}">login</a> to do that!</h1>
+{% endblock %}

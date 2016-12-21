@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lato|Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/closetstyle.css') }}">
+  <title>{% block title %}{% endblock %} - CampusCloset</title>
+</head>
+<body>
+  <h1>{% block header %}{% endblock %}</h1>
+  {% block nav %}
+  <div id="nav">
+    <h3><a href="{{url_for('upload')}}">Upload a new garment</a></h3>
+    <h3><a href="{{url_for('browse')}}">Browse all garments</a></h3>
+    <h3><a href="{{url_for('mygarments')}}">See my garments</a></h3>
+    <h3><a href="{{url_for('myreservations')}}">See my reservations</a></h3>
+  </div>
+  {% endblock %}
+  <div class="content">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class=flashes>
+      {% for message in messages %}
+      <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</form>
+</body>
+</html>
