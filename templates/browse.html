@@ -1,8 +1,35 @@
 {% extends "layout_template.html" %}
+{% block js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $("#filterform").submit(function() {
+    var $inputs = $('#filterform :input');
+    var values = {};
+    $inputs.each(function() {
+      values[this.name] = $(this).val();
+    });
+
+    $('.garment_item').each(function(){
+        matchedtype = $.inArray($(this).children(".garment_text").children(".garment_type").text(), values['garmenttype']) != -1;
+        matchedcolor = $.inArray($(this).children(".garment_text").children(".garment_color").text(), values['color']) != -1;
+        matchedsize = $.inArray($(this).children(".garment_text").children(".garment_size").text(), values['size']) != -1;
+
+        if (!(matchedtype && matchedcolor && matchedsize)) {
+            $(this).hide();
+        } else {
+            $(this).show()
+        }
+    });
+    event.preventDefault();
+  });
+});
+</script>
+{% endblock %}
 {% block title %}Browse Garments{% endblock %}
 {% block header %}Browse Garments{% endblock %}
 {% block content %}
-<form id="filterform" action = "" method = "POST" enctype = "multipart/form-data">
+<form id="filterform">
   <select name ="garmenttype" multiple>
     <option value="accessory" selected>Accessory</option>
     <option value="bottoms" selected>Bottoms</option>
@@ -56,17 +83,4 @@
 {% endfor %}
 {% endblock %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script>
-$(document).ready(function() {
-  $("#filterform").submit(function() {
-    var $inputs = $('#filterform :input');
-    var values = {};
-    $inputs.each(function() {
-      values[this.name] = $(this).val();
-      console.log(name + ': ');
-      console.log(values[name])
-    });
-    alert("submitted");
-  });
-});
+

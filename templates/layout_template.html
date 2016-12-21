@@ -4,6 +4,7 @@
   <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lato|Open+Sans" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/closetstyle.css') }}">
   <title>{% block title %}{% endblock %} - CampusCloset</title>
+  {% block js %}{% endblock %}
 </head>
 <body>
   <h1>{% block header %}{% endblock %}</h1>
