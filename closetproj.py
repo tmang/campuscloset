@@ -44,14 +44,23 @@ def lookUpGarment(garment):
 
 # adds new user into person table, stores hashed password
 def addUser(username, password):
+    # add user
     hashedpass = bcrypt.generate_password_hash(password)
     cursor = mysql.connection.cursor()
     cursor.execute('''INSERT INTO person (name, password) VALUES (%s, %s)''', [username, hashedpass])
+    mysql.connection.commit()
+
+    # get person id and set session credentials
+    cursor.execute('''SELECT person_id FROM person WHERE name = %s AND password = %s''', [username, hashedpass])
+    person_id = cursor.fetchone()
+    session['username'] = username
+    session['person_id'] = person_id
 
 
 # if valid login, returns person id, otherwise None
 def validateLogin(username, password):
-    cursor.execute('''SELECT * FROM person WHERE name = %s''', [name,])
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT * FROM person WHERE name = %s''', [username,])
     person_lookup = cursor.fetchone()
     if person_lookup:
         hashedpass = person_lookup[2]
@@ -83,13 +92,13 @@ def validate():
 		# check login validity
 		person_id = validateLogin(name, password)
         if person_id:
-			response = make_response(browse())
-			session['username'] = name
-			session['person_id'] = person_id
-		else:
-		    flash('Incorrect login credentials.')
-		    return redirect(url_for('login'))
-		return response
+            response = make_response(browse())
+            session['username'] = name
+            session['person_id'] = person_id
+        else:
+            flash('Incorrect login credentials.')
+            return redirect(url_for('login'))
+        return response
 
 
 @app.route('/register', methods=['POST', 'GET'])

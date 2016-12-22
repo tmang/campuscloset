@@ -1,16 +1,14 @@
 use Closet;
 
-DROP TABLE IF EXISTS person;
-DROP TABLE IF EXISTS garment;
-DROP TABLE IF EXISTS reservation;
 DROP TABLE IF EXISTS tag;
-
-SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS garment;
+DROP TABLE IF EXISTS person;
 
 CREATE TABLE person (
 	person_id int not null auto_increment,
 	name varchar(10) not null,
-	password varchar(20),
+	password char(60) not null,
 	primary key(person_id)
 ) ENGINE=InnoDB;
 
@@ -46,8 +44,6 @@ CREATE TABLE tag (
 	feature_type ENUM('garment type', 'color', 'size'),
 	primary key (tag_id)
 ) ENGINE=InnoDB;
-
-INSERT INTO person (name, password) VALUES ('user1', 'foo123');
 
 INSERT INTO tag
 (tag_name, feature_type)
