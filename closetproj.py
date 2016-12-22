@@ -80,7 +80,7 @@ def validate():
 		name = request.form['name']
 		password = request.form['password']
 
-		# check username validity
+		# check login validity
 		person_id = validateLogin(name, password)
         if person_id:
 			response = make_response(browse())
@@ -103,20 +103,20 @@ def process_registration():
     if request.method == 'POST':
 		name = request.form['name']
 		password = request.form['password']
-		password_confirm = request.form['password_conf']
+		password_confirm = request.form['password_confirm']
 
 		if (password != password_confirm):
-		    flash('Passwords do not match.')
+		    flash('Passwords did not match.')
 		    return redirect(url_for('register'))
 		else:
 		    cursor.execute('''SELECT * FROM person WHERE name = %s''', [name,])
 		    person_lookup = cursor.fetchone()
 		    if person_lookup:
-		        flash('Username already exists. Please choose another one.')
+		        flash('Username ' + name + ' already exists. Please choose another one.')
 		        return redirect(url_for('register'))
 		    else:
 		        addUser(name, password)
-		        flash('Welcome new user!')
+		        flash('Welcome ' + name + '!')
 		        return redirect(url_for('browse'))
 
 

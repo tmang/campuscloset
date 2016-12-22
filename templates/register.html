@@ -1,13 +1,13 @@
 {% extends "layout_template.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}Register{% endblock %}
 {% block nav %}{% endblock %}
 {% block content %}
 <div class = "loginbox">
-  <form action = "/validate" method = "POST">
+  <form action = "/process_registration" method = "POST">
     <p>Name <input type = "text" name = "name" /></p>
     <p>Password <input type = "password" name = "password"/></p>
+    <p>Confirm Password <input type = "password" name = "password_confirm"/></p>
     <p><input type = "submit" value = "submit" /></p>
   </form>
 </div>
-<p>Or <a href="{{url_for('register')}}" title="Register">register</a>!</p>
 {% endblock %}
