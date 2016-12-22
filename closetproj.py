@@ -2,6 +2,7 @@ import os, sys, datetime, flask
 from flask import Flask, flash, render_template, request, make_response, redirect, url_for, current_app, session
 from werkzeug import secure_filename
 from flask_mysqldb import MySQL
+from flask_bcrypt import Bcrypt
 
 ALLOWED_IMG_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
@@ -9,6 +10,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 mysql = MySQL(app)
+bcrypt = Bcrypt(app)
 
 # check whether img extension is allowed
 def allowed_file(filename):
@@ -40,6 +42,24 @@ def lookUpGarment(garment):
 	return garmentdict
 
 
+# adds new user into person table, stores hashed password
+def addUser(username, password):
+    hashedpass = bcrypt.generate_password_hash(password)
+    cursor = mysql.connection.cursor()
+    cursor.execute('''INSERT INTO person (name, password) VALUES (%s, %s)''', [username, hashedpass])
+
+
+# if valid login, returns person id, otherwise None
+def validateLogin(username, password):
+    cursor.execute('''SELECT * FROM person WHERE name = %s''', [name,])
+    person_lookup = cursor.fetchone()
+    if person_lookup:
+        hashedpass = person_lookup[2]
+        if bcrypt.check_password_hash(hashedpass, password):
+            return person_lookup[0]
+    return None
+
+
 @app.route('/', methods=["GET", "POST"])
 def index():
 	if 'username' in session:
@@ -47,27 +67,58 @@ def index():
 	else:
 		return redirect(url_for('login'))
 
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	return render_template('login.html')
 
+
+# validating login credentials
 @app.route('/validate', methods=['POST', 'GET'])
 def validate():
-	cursor = mysql.connection.cursor()
 	if request.method == 'POST':
 		name = request.form['name']
 		password = request.form['password']
 
 		# check username validity
-		cursor.execute('''SELECT * FROM person WHERE name = %s AND password = %s''', [name, password])
-		person_lookup = cursor.fetchone()
-		if person_lookup:
-				response = make_response(browse())
-				session['username'] = name
-				session['person_id'] = person_lookup[0]
+		person_id = validateLogin(name, password)
+        if person_id:
+			response = make_response(browse())
+			session['username'] = name
+			session['person_id'] = person_id
 		else:
-			response = make_response(error_login())
+		    flash('Incorrect login credentials.')
+		    return redirect(url_for('login'))
 		return response
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    return render_template('register.html')
+
+
+@app.route('/process_registration', methods=['POST', 'GET'])
+def process_registration():
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+		name = request.form['name']
+		password = request.form['password']
+		password_confirm = request.form['password_conf']
+
+		if (password != password_confirm):
+		    flash('Passwords do not match.')
+		    return redirect(url_for('register'))
+		else:
+		    cursor.execute('''SELECT * FROM person WHERE name = %s''', [name,])
+		    person_lookup = cursor.fetchone()
+		    if person_lookup:
+		        flash('Username already exists. Please choose another one.')
+		        return redirect(url_for('register'))
+		    else:
+		        addUser(name, password)
+		        flash('Welcome new user!')
+		        return redirect(url_for('browse'))
+
 
 @app.route('/browse')
 def browse():
